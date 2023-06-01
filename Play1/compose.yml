@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  db:
+    image: redis
+    expose:
+      - 6379
+
+  webapp:
+    build: ./Flask-App
+    ports:
+      - 5000:5000
+    depends_on:
+      - db
+    expose:
+      - 5000
+    deploy:
+      replicas: 3
+
+  proxy:
+    build: ./nginx-proxy
+    depends_on:
+      - webapp
+    ports:
+      - 8060:80
